@@ -6,7 +6,7 @@
             aria-controls="offcanvasAccount"
             style="background: transparent; border: none; display: flex; flex-direction: column; align-items: center;">
             <img src="img/burger.png" alt="Burger Icon" class="navbar-toggler-image"
-                style="max-width: 15%; height: auto;">
+                style="max-width: 20%; height: auto;">
             <small style="margin-top: 5px;">Menu</small>
         </button>
 
@@ -44,26 +44,17 @@
 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasAccount"
     aria-labelledby="offcanvasAccountLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasAccountLabel">Account Menu</h5>
+        <h4 class="offcanvas-title" id="offcanvasAccountLabel">Menu</h4>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
         <!-- Navigation Links -->
         <ul class="nav flex-column mb-4">
             <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="#">Home</a>
+                <a class="nav-link text-white fw-bold">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white fw-bold" href="#">News</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="#">Two-Wheels</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="#">Big Wheels</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="#">All 4 Wheels</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white fw-bold" href="#">Magazine</a>
@@ -73,19 +64,19 @@
         <!-- Divider -->
         <hr class="border-light">
 
-        <!-- Upload Button -->
+        <!-- Login Button -->
         <div class="d-grid gap-2 mb-4">
-            <button class="btn btn-outline-light fw-bold text-uppercase" type="button">Upload</button>
+            <p>Already have an account?</p>
+            <button class="btn btn-outline-light fw-bold text-uppercase" type="button">Login</button>
         </div>
 
-        <!-- Social Media Icons -->
-        <div class="d-flex justify-content-center gap-3">
-            <a href="#" class="text-white">
-                <i class="fab fa-facebook fa-2x"></i>
-            </a>
-            <a href="#" class="text-white">
-                <i class="fas fa-envelope fa-2x"></i>
-            </a>
+        <!-- Divider -->
+        <hr class="border-light">
+
+         <!-- Signup Button -->
+         <div class="d-grid gap-2 mb-4">
+            <p>Doesn't have an account?</p>
+            <button class="btn btn-outline-light fw-bold text-uppercase" type="button">Signup</button>
         </div>
     </div>
 </div>

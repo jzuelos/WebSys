@@ -14,6 +14,21 @@
 </head>
 
 <body>
+
+    <?php
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+    require_once 'database.php';
+
+    $conn = Database::getInstance();
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }else{
+        echo("Success");
+    }
+    ?>
+
     <?php include 'header.php'; ?>
     <div class="slider">
         <div class="sliderWrapper">
