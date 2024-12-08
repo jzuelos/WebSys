@@ -1,3 +1,24 @@
+<?php
+    session_start(); // Start session at the top
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+    require_once 'database.php';
+
+    $conn = Database::getInstance();
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    //Check if the user is logged in by verifying if 'user_id' exists in the session
+    if (!isset($_SESSION['customer_id'])) {
+        header("Location: userreg.php"); // Redirect to login page if user is not logged in
+        exit; // Stop further execution after redirection
+    }
+?>
+
 <html lang="en">
 
 <head>
@@ -14,21 +35,6 @@
 </head>
 
 <body>
-
-    <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    require_once 'database.php';
-
-    $conn = Database::getInstance();
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }else{
-        echo("Success");
-    }
-    ?>
-
     <?php include 'header.php'; ?>
     <div class="slider">
         <div class="sliderWrapper">

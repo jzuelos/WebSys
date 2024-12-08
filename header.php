@@ -1,3 +1,8 @@
+<?php
+// Check if the user is logged in
+$isLoggedIn = isset($_SESSION['customer_id']);
+?>
+
 <!-- Main Navigation -->
 <nav id="nav" style="background-color: #3C3D37;">
     <div class="navTop" style="display: flex; justify-content: space-between; align-items: center;">
@@ -64,19 +69,23 @@
         <!-- Divider -->
         <hr class="border-light">
 
-        <!-- Login Button -->
+        <!-- Conditional Logic for Login/Signup/Logout -->
         <div class="d-grid gap-2 mb-4">
-            <p>Already have an account?</p>
-            <button class="btn btn-outline-light fw-bold text-uppercase" type="button">Login</button>
-        </div>
-
-        <!-- Divider -->
-        <hr class="border-light">
-
-         <!-- Signup Button -->
-         <div class="d-grid gap-2 mb-4">
-            <p>Doesn't have an account?</p>
-            <button class="btn btn-outline-light fw-bold text-uppercase" type="button">Signup</button>
+            <?php if (!$isLoggedIn): ?>
+                <!-- Show Login -->
+                <p>Already have an account?</p>
+                <button class="btn btn-outline-light fw-bold text-uppercase" onclick="location.href='userreg.php'"
+                    type="button">
+                    Login
+                </button>
+            <?php else: ?>
+                <!-- Show Logout -->
+                <p><?php echo htmlspecialchars(ucfirst($_SESSION['username'])); ?>'s Account Settings</p>
+                <button class="btn btn-outline-light fw-bold text-uppercase" onclick="location.href='logout.php'"
+                    type="button">
+                    Logout
+                </button>
+            <?php endif; ?>
         </div>
     </div>
 </div>
