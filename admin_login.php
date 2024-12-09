@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="card shadow-sm" style="width: 35rem; height: 30rem; border-radius: 20px;">
         <div class="card-header text-center text-white p-4" style="background-color: #3C3D37;">
             <h1 class="h5">ADMIN LOGIN</h1>
-            <p class="mb-0">Hello there, Sign in and start managing your website</p>
+            <p class="mb-0">MotoMagX Administrator Login</p>
         </div>
         <div class="card-body">
             <?php
