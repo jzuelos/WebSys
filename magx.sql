@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2024 at 03:07 PM
+-- Generation Time: Dec 10, 2024 at 05:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,6 +65,22 @@ INSERT INTO `customer` (`customer_id`, `username`, `password`, `c_fname`, `c_sna
 (1, 'lloyd', 'user', 'john lloyd', NULL, 'Labo', 'jzuelos@gmail.com', '2024-12-03'),
 (2, 'melanie', '$2y$10$uIYaG1eoPM4URTDyIzOt8u.7jV1/fUmfb60H6dsw.eTPWY2ghmKSO', '', NULL, '', '', '0000-00-00');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `product_id` int(50) NOT NULL,
+  `p_brand` varchar(200) NOT NULL,
+  `p_name` varchar(200) NOT NULL,
+  `p_desc` text NOT NULL,
+  `p_price` int(50) NOT NULL,
+  `p_active` enum('0','1') NOT NULL,
+  `p_creation` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -82,6 +98,12 @@ ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`);
 
 --
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`product_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -96,6 +118,12 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `customer`
   MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
