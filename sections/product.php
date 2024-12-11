@@ -17,22 +17,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
     $productName = $_POST['productName'];
     $productDescription = $_POST['productDescription'];
     $price = $_POST['price'];
-    $active = $_POST['active'] ? 1 : 0; // Checkbox handling
+    $active = isset($_POST['active']) ? 1 : 0; // Checkbox handling
     $productCreation = $_POST['productCreation'];
+
+    // Handle image upload
+    $imagePath = null; // Default to null if no image
+    if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
+        $targetDir = "uploads/"; // Directory to save uploaded images
+        $imageName = basename($_FILES['productImage']['name']);
+        $targetFilePath = $targetDir . uniqid() . "_" . $imageName; // Avoid name conflicts
+
+        // Ensure the directory exists
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        // Move uploaded file to the target directory
+        if (move_uploaded_file($_FILES['productImage']['tmp_name'], $targetFilePath)) {
+            $imagePath = $targetFilePath;
+        } else {
+            $_SESSION['error_message'] = 'Failed to upload image.';
+            header('Location: ./admin_dashboard.php?page=product');
+            exit();
+        }
+    }
 
     try {
         // Prepare SQL statement
-        $stmt = $conn->prepare("INSERT INTO product (p_brand, p_name, p_desc, p_price, p_active, p_creation) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO product (p_brand, p_name, p_desc, p_price, p_active, p_creation, p_image) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-        // Bind parameters safely
+        // Bind parameters
         $stmt->bind_param(
-            "ssssss",
+            "sssssss",
             $brand,
             $productName,
             $productDescription,
             $price,
             $active,
-            $productCreation
+            $productCreation,
+            $imagePath
         );
 
         // Execute the query
@@ -45,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
     } catch (Exception $e) {
         $_SESSION['error_message'] = "Error: {$e->getMessage()}";
     }
-    
+
     header('Location: ./admin_dashboard.php?page=product');
     exit();
 }
@@ -61,8 +84,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
     <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!-- Include Bootstrap 4 CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <title>Product Manager</title>
 </head>
@@ -79,84 +102,76 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchInput" placeholder="Search">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-primary btn-hover">Search</button>
+                            <button type="button" class="btn btn-primary btn-hover btn-sm ms-2">Search</button>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <button class="btn btn-success" data-toggle="modal" data-target="#addProductModal">Add
-                        Product</button>
+                    <button class="btn btn-success btn-sm ms-2" data-bs-toggle="modal"
+                        data-bs-target="#addProductModal">Add Product</button>
                 </div>
             </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-bordered text-center modern-table">
+                <table class="table table-bordered table-sm text-center">
                     <thead class="thead-dark">
                         <tr>
-                            <!-- Select Column -->
                             <th class="text-center align-middle">Select</th>
                             <th class="text-center align-middle">ID</th>
-                            <th class="text-center align-middle">Brand</th>
+                            <th class="text-center align-middle">Image</th>
                             <th class="text-center align-middle">Product Name</th>
-                            <th class="text-center align-middle">Product Description</th>
-                            <!-- Active Column -->
+                            <th class="text-center align-middle">Brand</th>
+                            <th class="text-center align-middle">Description</th>
                             <th class="text-center align-middle">Active</th>
                             <th class="text-center align-middle">Price</th>
                             <th class="text-center align-middle">Edit</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <!-- Select Checkbox -->
-                            <td><input type="checkbox" class="select-checkbox"></td>
-                            <td>001</td>
-                            <td>Brand A</td>
-                            <td>Product X</td>
-                            <td>Product X Description</td>
-                            <!-- Active Checkbox -->
-                            <td><input type="checkbox" class="active-checkbox" checked></td>
-                            <td>$100</td>
-                            <td>
-                                <button class="btn btn-link text-primary" data-toggle="modal" data-target="#editModal">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="select-checkbox"></td>
-                            <td>002</td>
-                            <td>Brand B</td>
-                            <td>Product Y</td>
-                            <td>Product Y Description</td>
-                            <td><input type="checkbox" class="active-checkbox"></td>
-                            <td>$150</td>
-                            <td>
-                                <button class="btn btn-link text-primary" data-toggle="modal" data-target="#editModal">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="select-checkbox"></td>
-                            <td>003</td>
-                            <td>Brand C</td>
-                            <td>Product Z</td>
-                            <td>Product Z Description</td>
-                            <td><input type="checkbox" class="active-checkbox" checked></td>
-                            <td>$200</td>
-                            <td>
-                                <button class="btn btn-link text-primary" data-toggle="modal" data-target="#editModal">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        <?php
+                        // Fetch products from the database
+                        $query = "SELECT * FROM product";
+                        $result = $conn->query($query);
+
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td><input type='checkbox' class='form-check-input'></td>";
+                                echo "<td>{$row['product_id']}</td>";
+
+                                // Image with click to zoom
+                                echo "<td>
+                                        <a href='#' onclick='zoomImage(\"{$row['p_image']}\")'>
+                                            <img src='{$row['p_image']}' alt='Product Image' class='img-thumbnail' style='width: 50px; height: 50px;'>
+                                        </a>
+                                      </td>";
+
+                                echo "<td>{$row['p_name']}</td>";
+                                echo "<td>{$row['p_brand']}</td>";
+
+                                // Truncate and hover effect with inline styles and JavaScript
+                                echo "<td title='{$row['p_desc']}'>
+                                        <span style='display:block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{$row['p_desc']}</span>
+                                        <span class='hover-message' style='display:none; position:absolute; background:#f9f9f9; padding:5px; border:1px solid #ddd;'>{$row['p_desc']}</span>
+                                      </td>";
+
+                                echo "<td><input type='checkbox' class='form-check-input'" . ($row['p_active'] ? " checked" : "") . "></td>";
+                                echo "<td>\${$row['p_price']}</td>";
+                                echo "<td><button class='btn btn-link text-primary p-0' data-bs-toggle='modal' data-bs-target='#editModal'><i class='fas fa-edit'></i></button></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='9'>No products found</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
             <div class="d-flex justify-content-end mt-2">
-                <button class="btn btn-danger" data-toggle="modal" data-target="#">Delete</button>
-                <button class="btn btn-info ml-2" data-toggle="modal" data-target="#viewAllModal">View All</button>
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#">Delete</button>
+                <button class="btn btn-info btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#viewAllModal">View
+                    All</button>
             </div>
         </div>
     </section>
@@ -173,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
+                    <form action="" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="brand">Product Brand</label>
                             <input type="text" class="form-control" id="brand" name="brand" placeholder="Enter brand"
@@ -194,6 +209,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                             <input type="number" class="form-control" id="price" name="price" placeholder="Enter price"
                                 required>
                         </div>
+                        <div class="form-group">
+                            <label for="productImage">Product Image</label>
+                            <input type="file" class="form-control" id="productImage" name="productImage"
+                                accept="image/*" required>
+                        </div>
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="active" name="active" checked>
                             <label class="form-check-label" for="active">Is Active?</label>
@@ -204,8 +224,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                                 value="<?php echo date('Y-m-d'); ?>" readonly>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" name="save_product" class="btn btn-primary">Save Product</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" name="save_product" class="btn btn-primary btn-sm ms-2">Save
+                                Product</button>
+                            <button type="button" class="btn btn-secondary btn-sm ms-2"
+                                data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -247,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -259,6 +281,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="viewAllModalLabel">All Products</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
@@ -292,16 +315,54 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-sm ms-2" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Load JS and CSS dependencies -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+        // Zoom Image function - Moved outside of DOMContentLoaded to make it accessible globally
+        function zoomImage(imageUrl) {
+            // Create a new image element for the zoomed image
+            var zoomedImage = document.createElement('img');
+            zoomedImage.src = imageUrl;
+            zoomedImage.style.width = '40%';
+            zoomedImage.style.maxHeight = '50%';
+            zoomedImage.style.margin = 'auto';
+            zoomedImage.style.display = 'block';
+            zoomedImage.style.border = '2px solid #ddd';
+
+            // Create an overlay for the zoomed image
+            var overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '1000';
+            overlay.style.cursor = 'pointer';
+
+            // Append the zoomed image to the overlay
+            overlay.appendChild(zoomedImage);
+
+            // Append the overlay to the body
+            document.body.appendChild(overlay);
+
+            // Close the overlay when clicked
+            overlay.onclick = function () {
+                document.body.removeChild(overlay);
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             // Get current date
             const today = new Date();
@@ -315,9 +376,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
 
             // Set the value of the productCreation input
             document.getElementById('productCreation').value = currentDate;
+
+            // Zoom Image function
+            function zoomImage(imageUrl) {
+                // Create a new image element for the zoomed image
+                var zoomedImage = document.createElement('img');
+                zoomedImage.src = imageUrl;
+                zoomedImage.style.width = '40%';
+                zoomedImage.style.maxHeight = '50%';
+                zoomedImage.style.margin = 'auto';
+                zoomedImage.style.display = 'block';
+                zoomedImage.style.border = '2px solid #ddd';
+
+                // Create an overlay for the zoomed image
+                var overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                overlay.style.display = 'flex';
+                overlay.style.justifyContent = 'center';
+                overlay.style.alignItems = 'center';
+                overlay.style.zIndex = '1000';
+                overlay.style.cursor = 'pointer';
+
+                // Append the zoomed image to the overlay
+                overlay.appendChild(zoomedImage);
+
+                // Append the overlay to the body
+                document.body.appendChild(overlay);
+
+                // Close the overlay when clicked
+                overlay.onclick = function () {
+                    document.body.removeChild(overlay);
+                }
+            }
         });
     </script>
-
 </body>
 
 </html>
