@@ -29,7 +29,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 // Sanitize and validate the page input
 $allowed_pages = ['dashboard', 'product', 'customer', 'seller', 'orders'];
 if (!in_array($page, $allowed_pages)) {
-  $page = '404'; 
+  $page = '404';
 }
 ?>
 
@@ -79,7 +79,7 @@ if (!in_array($page, $allowed_pages)) {
       </nav>
 
       <!-- Main Content -->
-      <main class="col-md-10 p-4">
+      <main class="col-md-10 p-4" style="background-color: #f0f0f0;">
         <?php
         // Include the relevant content based on the current page
         $file_path = "sections/{$page}.php";
@@ -90,6 +90,7 @@ if (!in_array($page, $allowed_pages)) {
         }
         ?>
       </main>
+
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
