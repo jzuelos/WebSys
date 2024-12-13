@@ -63,14 +63,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     }
 }
 
-// Handle the signup logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_EMAIL);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $c_fname = filter_input(INPUT_POST, 'c_fname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $c_sname = filter_input(INPUT_POST, 'c_sname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
-    if (empty($username) || empty($password)) {
-        $_SESSION['error'] = "Username and password cannot be empty.";
+    // Use a different sanitization approach for the birthday
+    $bday = filter_input(INPUT_POST, 'bday', FILTER_DEFAULT); // No sanitization, just ensure the input is a valid date
+
+    // Validate the date format (yyyy-mm-dd) for birthday
+    if ($bday && !preg_match("/^\d{4}-\d{2}-\d{2}$/", $bday)) {
+        $_SESSION['error'] = "Invalid birthday format.";
+    }
+
+    // Check if any field is empty
+    if (empty($username) || empty($password) || empty($c_fname) || empty($c_sname) || empty($address) || empty($email) || empty($bday)) {
+        $_SESSION['error'] = "All fields are required.";
     } else {
+        // Get the current date for creation day
+        $creation_day = date('Y-m-d');  // Format: YYYY-MM-DD
+
+        // Check if the username already exists
         $stmt = $conn->prepare("SELECT * FROM customer WHERE username = ? LIMIT 1");
         if ($stmt) {
             $stmt->bind_param("s", $username);
@@ -79,22 +95,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
 
             if ($result->num_rows > 0) {
                 $_SESSION['error'] = "Username already exists. Please choose another.";
+                $stmt->close(); // Close statement after use
             } else {
+                // Hash the password
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO customer (username, password) VALUES (?, ?)");
+
+                // Prepare and execute the insert query (no role field, added creation_day)
+                $stmt = $conn->prepare("INSERT INTO customer (username, password, c_fname, c_sname, address, email, bday, c_creation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 if ($stmt) {
-                    $stmt->bind_param("ss", $username, $hashedPassword);
+                    $stmt->bind_param("ssssssss", $username, $hashedPassword, $c_fname, $c_sname, $address, $email, $bday, $creation_day);
                     if ($stmt->execute()) {
                         $_SESSION['success'] = "Registration successful!";
                     } else {
                         $_SESSION['error'] = "Error during registration.";
                     }
-                    $stmt->close();
+                    $stmt->close(); // Close the insert statement after execution
                 } else {
-                    $_SESSION['error'] = "Failed to prepare the database query.";
+                    $_SESSION['error'] = "Failed to prepare the database query for insertion.";
                 }
             }
-            $stmt->close();
         } else {
             $_SESSION['error'] = "Database error while processing signup.";
         }
@@ -199,67 +218,125 @@ $conn->close();
                         </form>
                     </div>
 
-                    <div class="tab-pane fade p-3" id="pills-profile" role="tabpanel"
+                    <div class="tab-pane fade p-2" id="pills-profile" role="tabpanel"
                         aria-labelledby="pills-profile-tab">
-                        <h5 class="ml-3 mb-4">Sign-up</h5>
-                        <form class="m-3" action="" method="POST">
-                            <!-- Email input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="text" name="username" class="form-control" required />
-                                <label class="form-label">Username</label>
+                        <h5 class="ml-1 mb-3 text-sm">Sign-up</h5>
+                        <form class="m-2 mx-auto" action="" method="POST" style="max-width: 700px; font-size: 0.85rem;">
+
+                            <!-- Row for Username and Password inputs (beside each other) -->
+                            <div class="row mb-1">
+                                <!-- Username input (1st column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="text" name="username" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">Username</label>
+                                    </div>
+                                </div>
+
+                                <!-- Password input (2nd column, beside Username) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="password" name="password" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">Password</label>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Password input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="password" name="password" class="form-control" required />
-                                <label class="form-label">Password</label>
+                            <!-- Divider line using Bootstrap classes -->
+                            <div class="my-3">
+                                <hr>
                             </div>
 
-                            <!-- 2 column grid layout for inline styling -->
-                            <div class="row mb-4">
+                            <!-- Personal Details Section -->
+                            <div class="row mb-3">
+                                <!-- First Name input (1st column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="text" name="c_fname" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">First Name</label>
+                                    </div>
+                                </div>
+
+                                <!-- Surname input (2nd column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="text" name="c_sname" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">Surname</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <!-- Address input (1st column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="text" name="address" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">Address</label>
+                                    </div>
+                                </div>
+
+                                <!-- Email input (2nd column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="email" name="email" class="form-control form-control-sm"
+                                            required />
+                                        <label class="form-label">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-1">
+                                <!-- Birthday input (1st column) -->
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <input type="date" name="bday" class="form-control form-control-sm" required />
+                                        <label class="form-label">Birthday</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Checkbox for "Remember me" -->
+                            <div class="row mb-3">
                                 <div class="col d-flex justify-content-center">
-                                    <!-- Checkbox -->
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="form2Example31"
                                             checked />
                                         <label class="form-check-label" for="form2Example31"> Remember me </label>
                                     </div>
                                 </div>
-
                                 <div class="col">
-                                    <!-- Simple link -->
                                     <a href="#!">Forgot password?</a>
                                 </div>
                             </div>
 
                             <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-primary btn-block mb-4" name="signup">Register</button>
-                            <p>Have concerns?</p>
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-link btn-floating mx-1">
+                            <button type="submit" class="btn btn-primary btn-block btn-sm mb-3"
+                                name="signup">Register</button>
+
+                            <p class="mb-3">Have concerns?</p>
+
+                            <!-- Social media buttons -->
+                            <button type="button" class="btn btn-link btn-floating mx-1 btn-sm">
                                 <i class="fab fa-facebook-f"></i>
                             </button>
 
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-link btn-floating mx-1">
+                            <button type="button" class="btn btn-link btn-floating mx-1 btn-sm">
                                 <i class="fab fa-google"></i>
                             </button>
 
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-link btn-floating mx-1">
+                            <button type="button" class="btn btn-link btn-floating mx-1 btn-sm">
                                 <i class="fab fa-twitter"></i>
                             </button>
 
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-link btn-floating mx-1">
+                            <button type="button" class="btn btn-link btn-floating mx-1 btn-sm">
                                 <i class="fab fa-instagram"></i>
                             </button>
-                    </div>
-                    <div class="tab-pane fade p-3" id="pills-profile" role="tabpanel"
-                        aria-labelledby="pills-profile-tab">
-                        <h4>Profile Content</h4>
-                        <p>Here you can manage your user profile details.</p>
+                        </form>
                     </div>
                 </div>
             </div>

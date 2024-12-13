@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2024 at 03:33 PM
+-- Generation Time: Dec 13, 2024 at 01:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,16 +55,17 @@ CREATE TABLE `customer` (
   `c_sname` varchar(50) DEFAULT NULL,
   `address` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `bday` date NOT NULL
+  `phone` varchar(20) NOT NULL,
+  `bday` date NOT NULL,
+  `c_creation` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `username`, `password`, `role`, `c_fname`, `c_sname`, `address`, `email`, `bday`) VALUES
-(1, 'lloyd', 'user', 'customer', 'john lloyd', NULL, 'Labo', 'jzuelos@gmail.com', '2024-12-03'),
-(2, 'melanie', '$2y$10$uIYaG1eoPM4URTDyIzOt8u.7jV1/fUmfb60H6dsw.eTPWY2ghmKSO', 'customer', '', NULL, '', '', '0000-00-00');
+INSERT INTO `customer` (`customer_id`, `username`, `password`, `role`, `c_fname`, `c_sname`, `address`, `email`, `phone`, `bday`, `c_creation`) VALUES
+(9, 'melanie', '$2y$10$2qTbkaSnjmwC85tk3qarX.gqkQrwCOJdDTG4BQjpEGThaumr2Bk26', 'customer', 'Melanie', 'Villacruel', 'Camarines Norte', 'cyzuz@yahoo.com', '09123456789', '2024-12-13', '2024-12-13');
 
 -- --------------------------------------------------------
 
@@ -88,8 +89,8 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `p_brand`, `p_name`, `p_desc`, `p_price`, `p_active`, `p_creation`, `p_image`) VALUES
-(28, 'BomX', 'BomX Star Mags', 'A high-performance mag wheel designed for speed and durability, ideal for street and track racing motorcycles. Suitable for Indonesian Concept.', 3000, '1', '2024-12-12', 'uploads/675ad8f508086_BomX.jpg'),
-(31, 'Asio', 'Asio Mags', 'Known for its sleek design and strength, this mag wheel is perfect for urban commuting and light off-road riding. Suitable for Big Bike Concept.', 2500, '1', '2024-12-12', 'uploads/675ae1bf8aa35_Asio.jpg');
+(39, 'BomX', 'BomX Star Mags', 'asdf', 2500, '1', '2024-12-13', 'uploads/675c2b564a2e5_BomX.jpg'),
+(40, 'Asio', 'Asio Mags', 'asdfas', 3500, '1', '2024-12-13', 'uploads/product_675c2ba3c1b99.jpg');
 
 --
 -- Indexes for dumped tables
@@ -105,7 +106,8 @@ ALTER TABLE `admin`
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
-  ADD PRIMARY KEY (`customer_id`);
+  ADD PRIMARY KEY (`customer_id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `product`
@@ -127,13 +129,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

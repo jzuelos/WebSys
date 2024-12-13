@@ -85,7 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_product'])) {
     exit();
 }
 
-// Handle form submission for updating a product
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_product'])) {
     $productId = $_POST['productId'];
     $brand = $_POST['brand'];
@@ -95,13 +94,67 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_product'])) {
     $active = isset($_POST['active']) ? 1 : 0; // Checkbox handling
 
     try {
-        // Prepare SQL statement
-        $stmt = $conn->prepare("UPDATE product SET p_brand = ?, p_name = ?, p_desc = ?, p_price = ?, p_active = ? WHERE product_id = ?");
+        // Step 1: Get the existing image path from the database (to retain it if no new image is uploaded)
+        $select_query = "SELECT p_image FROM product WHERE product_id = ?";
+        $stmt = $conn->prepare($select_query);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        $stmt->bind_result($existingImagePath);
+        $stmt->fetch();
+        $stmt->close();
 
-        // Bind parameters
-        $stmt->bind_param("sssssi", $brand, $productName, $productDescription, $price, $active, $productId);
+        // Default value for new image path (retain the old one if no new image is uploaded)
+        $newImagePath = $existingImagePath;
 
-        // Execute the query
+        // Step 2: Check if a new image was uploaded
+        if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
+            // Validate the uploaded image (only allow images)
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            $fileType = $_FILES['productImage']['type'];
+
+            if (in_array($fileType, $allowedTypes)) {
+                // Define the directory to save uploaded images
+                $uploadDir = "uploads/";
+
+                // Ensure the directory exists
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                // Generate a unique name for the image file (avoid overwriting)
+                $imageName = uniqid('product_') . '.' . pathinfo($_FILES['productImage']['name'], PATHINFO_EXTENSION);
+                $imagePath = $uploadDir . $imageName;
+
+                // Step 3: Move the uploaded file to the upload directory
+                if (move_uploaded_file($_FILES['productImage']['tmp_name'], $imagePath)) {
+                    // Successfully uploaded the image, set the new image path
+                    $newImagePath = $imagePath;
+
+                    // Step 4: Delete the old image (if it exists)
+                    if ($existingImagePath && file_exists($existingImagePath)) {
+                        // Delete the old image file from the server
+                        if (unlink($existingImagePath)) {
+                            echo "Old image deleted successfully.<br>";
+                        } else {
+                            echo "Failed to delete old image.<br>";
+                        }
+                    }
+                } else {
+                    throw new Exception('Failed to upload the image.');
+                }
+            } else {
+                throw new Exception('Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+            }
+        }
+
+        // Step 5: Prepare SQL statement to update the product
+        $updateQuery = "UPDATE product SET p_brand = ?, p_name = ?, p_desc = ?, p_price = ?, p_active = ?, p_image = ? WHERE product_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+
+        // Bind parameters (including the image path)
+        $stmt->bind_param("ssssssi", $brand, $productName, $productDescription, $price, $active, $newImagePath, $productId);
+
+        // Execute the update query
         if ($stmt->execute()) {
             $_SESSION['success_message'] = 'Product updated successfully!';
         } else {
@@ -115,6 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_product'])) {
     header('Location: ./admin_dashboard.php?page=product');
     exit();
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
     if (!empty($_POST['product_ids'])) {
@@ -243,26 +297,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
 
                                 // Image with click to zoom
                                 echo "<td>
-                    <a href='#' onclick='zoomImage(\"{$row['p_image']}\")'>
-                        <img src='{$row['p_image']}' alt='Product Image' class='img-thumbnail' style='width: 50px; height: 50px;'>
-                    </a>
-                  </td>";
+                                        <a href='#' onclick='zoomImage(\"{$row['p_image']}\")'>
+                                            <img src='{$row['p_image']}' alt='Product Image' class='img-thumbnail' style='width: 50px; height: 50px;'>
+                                        </a>
+                                    </td>";
 
                                 echo "<td>{$row['p_name']}</td>";
                                 echo "<td>{$row['p_brand']}</td>";
 
                                 // Truncate and hover effect with inline styles and JavaScript
                                 echo "<td title='{$row['p_desc']}'>
-                    <span style='display:block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{$row['p_desc']}</span>
-                    <span class='hover-message' style='display:none; position:absolute; background:#f9f9f9; padding:5px; border:1px solid #ddd;'>{$row['p_desc']}</span>
-                  </td>";
+                                        <span style='display:block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{$row['p_desc']}</span>
+                                        <span class='hover-message' style='display:none; position:absolute; background:#f9f9f9; padding:5px; border:1px solid #ddd;'>{$row['p_desc']}</span>
+                                    </td>";
 
                                 echo "<td><input type='checkbox' class='form-check-input' " . ($row['p_active'] ? "checked" : "") . " disabled></td>";
                                 echo "<td>₱{$row['p_price']}</td>";
                                 echo "<td><button class='btn btn-link text-primary p-0' 
-                    data-bs-toggle='modal' data-bs-target='#editModal' 
-                    onclick='populateEditModal({$row['product_id']}, \"{$row['p_name']}\", \"{$row['p_desc']}\", \"{$row['p_brand']}\", \"{$row['p_price']}\", \"{$row['p_active']}\")'>
-                    <i class='fas fa-edit'></i></button></td>";
+                                        data-bs-toggle='modal' 
+                                        data-bs-target='#editModal' 
+                                        onclick='populateEditModal(
+                                            " . json_encode($row) . "
+                                        )'>
+                                        <i class='fas fa-edit'></i>
+                                    </button></td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -383,7 +441,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                 </div>
             </div>
 
-            <!-- Edit Modal -->
+            <!-- Edit Product Modal -->
             <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-m">
                     <div class="modal-content">
@@ -392,7 +450,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="">
+                            <form method="POST" action="" enctype="multipart/form-data">
                                 <!-- Hidden ID field -->
                                 <input type="hidden" id="editProductId" name="productId">
 
@@ -420,6 +478,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                                     <input type="checkbox" class="form-check-input" id="editActive" name="active">
                                     <label class="form-check-label" for="editActive">Is Active?</label>
                                 </div>
+
+                                <!-- Image Upload Section -->
+                                <div class="form-group">
+                                    <label for="editImage">Product Image</label>
+                                    <input type="file" class="form-control" id="editImage" name="productImage"
+                                        accept="image/*">
+                                    <small class="form-text text-muted">Leave blank to keep the current image.</small>
+                                </div>
+
+                                <!-- Display Current Image Section -->
+                                <div class="form-group">
+                                    <label for="currentImage">Current Image</label>
+                                    <div id="currentImage">
+                                        <!-- Current image will be shown here -->
+                                    </div>
+                                </div>
+
                                 <div class="modal-footer">
                                     <button type="submit" name="update_product" class="btn btn-success">Save
                                         Changes</button>
@@ -534,16 +609,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
             <script>
                 // Function to update the "Delete" button's disabled state based on checkbox selection
                 function updateDeleteButtonState() {
-                    // Collect the selected checkboxes from the first column of the table
                     const selectedCheckboxes = document.querySelectorAll('table tbody tr td:first-child input[type="checkbox"]:checked');
                     const deleteButton = document.querySelector('.btn-danger[data-bs-target="#deleteModal"]');
 
-                    // Disable the button if no checkboxes are selected, otherwise enable it
-                    if (selectedCheckboxes.length === 0) {
-                        deleteButton.disabled = true; // Disable button
-                    } else {
-                        deleteButton.disabled = false; // Enable button
-                    }
+                    deleteButton.disabled = selectedCheckboxes.length === 0;
                 }
 
                 // Call the function initially to set the correct state on page load
@@ -556,30 +625,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
 
                 // Collect selected product IDs and pass them to the modal when the "Delete" button is clicked
                 document.querySelector('.btn-danger[data-bs-target="#deleteModal"]').addEventListener('click', function (event) {
-                    // Collect the selected checkboxes from the first column of the table
                     const selectedCheckboxes = document.querySelectorAll('table tbody tr td:first-child input[type="checkbox"]:checked');
 
                     if (selectedCheckboxes.length === 0) {
                         alert('No products selected for deletion.');
-                        event.preventDefault(); // Prevent the modal from opening if no checkboxes are selected
+                        event.preventDefault();
                         return;
                     }
 
-                    // Get selected product IDs from the table (assuming the product ID is in the second column of each row)
                     const selectedIds = Array.from(selectedCheckboxes)
-                        .map(checkbox => checkbox.closest('tr').querySelector('td:nth-child(2)').textContent.trim());  // Get ID from the second column
+                        .map(checkbox => checkbox.closest('tr').querySelector('td:nth-child(2)').textContent.trim());
 
-                    // Update the modal with selected IDs
-                    const idsList = selectedIds.join(', '); // Join the IDs into a comma-separated string
-                    document.getElementById('selectedIdsText').textContent = `Selected product IDs: ${idsList}`; // Show selected IDs in modal
+                    const idsList = selectedIds.map(id => encodeURIComponent(id)).join(', ');
 
-                    // Pass selected IDs to the hidden input field for the form submission
+                    document.getElementById('selectedIdsText').textContent = `Selected product IDs: ${idsList}`;
                     document.getElementById('productIdsToDelete').value = JSON.stringify(selectedIds);
                 });
 
                 // Zoom Image function
                 function zoomImage(imageUrl) {
-                    // Create a new image element for the zoomed image
                     var zoomedImage = document.createElement('img');
                     zoomedImage.src = imageUrl;
                     zoomedImage.style.width = '40%';
@@ -587,8 +651,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                     zoomedImage.style.margin = 'auto';
                     zoomedImage.style.display = 'block';
                     zoomedImage.style.border = '2px solid #ddd';
+                    zoomedImage.style.transition = 'transform 0.3s ease';
+                    zoomedImage.style.transform = 'scale(1.2)';
 
-                    // Create an overlay for the zoomed image
                     var overlay = document.createElement('div');
                     overlay.style.position = 'fixed';
                     overlay.style.top = '0';
@@ -602,13 +667,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                     overlay.style.zIndex = '1000';
                     overlay.style.cursor = 'pointer';
 
-                    // Append the zoomed image to the overlay
                     overlay.appendChild(zoomedImage);
-
-                    // Append the overlay to the body
                     document.body.appendChild(overlay);
 
-                    // Close the overlay when clicked
                     overlay.onclick = function () {
                         document.body.removeChild(overlay);
                     };
@@ -616,31 +677,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
 
                 // Set current date in the productCreation input field
                 document.addEventListener("DOMContentLoaded", function () {
-                    const today = new Date();
-
-                    // Format date in YYYY-MM-DD for the date input
-                    const year = today.getFullYear();
-                    const month = String(today.getMonth() + 1).padStart(2, '0');
-                    const day = String(today.getDate()).padStart(2, '0');
-
-                    const currentDate = `${year}-${month}-${day}`;
-
-                    // Set the value of the productCreation input
-                    document.getElementById('productCreation').value = currentDate;
+                    const productCreation = document.getElementById('productCreation');
+                    if (productCreation) {
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = String(today.getMonth() + 1).padStart(2, '0');
+                        const day = String(today.getDate()).padStart(2, '0');
+                        const currentDate = `${year}-${month}-${day}`;
+                        productCreation.value = currentDate;
+                    }
                 });
 
-                // Populate the edit modal with product details
-                function populateEditModal(id, name, description, brand, price, active) {
-                    // Populate modal fields with the product details
-                    document.getElementById('editProductId').value = id;
-                    document.getElementById('editProductName').value = name;
-                    document.getElementById('editProductDescription').value = description;
-                    document.getElementById('editBrand').value = brand;
-                    document.getElementById('editPrice').value = price;
-                    document.getElementById('editActive').checked = (active == 1);  // Checkbox for 'active'
-                }
-            </script>
+                function populateEditModal(product) {
+                    // Populate the modal with the product details
+                    document.getElementById('editProductId').value = product.product_id;
+                    document.getElementById('editBrand').value = product.p_brand;
+                    document.getElementById('editProductName').value = product.p_name;
+                    document.getElementById('editProductDescription').value = product.p_desc;
+                    document.getElementById('editPrice').value = product.p_price;
+                    document.getElementById('editActive').checked = (product.p_active == 1);
 
+                    // Set the image preview if available
+                    const imagePath = product.p_image.trim();
+                    if (imagePath) {
+                        document.getElementById('currentImage').innerHTML = `<img src="${imagePath}" alt="Current Image" style="width: 100px; height: 100px; object-fit: cover;">`;
+                    } else {
+                        document.getElementById('currentImage').innerHTML = `<img src="default-image.jpg" alt="No image" style="width: 100px; height: 100px; object-fit: cover;">`;
+                    }
+                }
+
+            </script>
 </body>
 
 </html>
