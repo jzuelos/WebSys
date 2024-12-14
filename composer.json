@@ -1,0 +1,13 @@
+{
+    "name": "jzuelos/web-sys",
+    "description": "project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "y"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
