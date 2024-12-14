@@ -1,20 +1,20 @@
 <?php
-    session_start(); // Start session at the top
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+session_start(); // Start session at the top
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    require_once 'database.php';
+require_once 'database.php';
 
-    $conn = Database::getInstance();
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+$conn = Database::getInstance();
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-    //Check if the user is logged in by verifying if 'user_id' exists in the session
-    if (!isset($_SESSION['customer_id'])) {
-        header("Location: userreg.php"); // Redirect to login page if user is not logged in
-        exit; // Stop further execution after redirection
-    }
+//Check if the user is logged in by verifying if 'user_id' exists in the session
+if (!isset($_SESSION['customer_id'])) {
+    header("Location: userreg.php"); // Redirect to login page if user is not logged in
+    exit; // Stop further execution after redirection
+}
 ?>
 
 <html lang="en">
@@ -34,52 +34,43 @@
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="slider">
-        <div class="sliderWrapper">
-            <div class="sliderItem">
-                <img src="./img/boomx.png" alt="" class="sliderImg">
-                <div class="sliderBg"></div>
-                <h1 class="sliderTitle">BOM X</br> NEW</br></h1>
-                <h2 class="sliderPrice">₱2,500</h2>
-                <a href="#product">
-                    <button class="buyButton">BUY NOW!</button>
-                </a>
+
+    <div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
+        <div class="row w-100 position-relative">
+            <!-- First column: Price -->
+            <div class="col-4 d-flex justify-content-center align-items-start position-relative">
+                <div class="p-3 rounded shadow-sm text-center w-100"
+                    style="background-color: white; border: 1px solid black;">
+                    <p class="m-0 display-4 text-black">₱2500</p>
+                </div>
             </div>
-            <div class="sliderItem">
-                <img src="./img/asio.png" alt="" class="sliderImg">
-                <div class="sliderBg"></div>
-                <h1 class="sliderTitle">ASIO</br> NEW</br></h1>
-                <h2 class="sliderPrice">₱2,500</h2>
-                <a href="#product">
-                    <button class="buyButton">BUY NOW!</button>
-                </a>
+
+            <!-- Second column: Centered Content with Oval (Hidden Square) -->
+            <div class="col-4 d-flex justify-content-center align-items-center position-relative">
+                <!-- Oval (acting as background) -->
+                <div class="text-white d-flex justify-content-center align-items-center shadow-lg"
+                    style="width: 800px; height: 400px; border-radius: 50%; background-color: #339f62; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1;">
+                    <!-- Image inside the oval -->
+                    <img id="brandImage" src="" alt="Brand Image"
+                        style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                </div>
+
+                <!-- Hidden square (hidden using visibility: hidden) -->
+                <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded shadow-lg"
+                    style="width: 300px; height: 300px; visibility: hidden;">
+                    <p class="m-0">pautot lang to</p>
+                </div>
             </div>
-            <div class="sliderItem">
-                <img src="./img/" alt="" class="sliderImg">
-                <div class="sliderBg"></div>
-                <h1 class="sliderTitle">TRC</br> NEW</br></h1>
-                <h2 class="sliderPrice">₱2,500</h2>
-                <a href="#product">
-                    <button class="buyButton">BUY NOW!</button>
-                </a>
-            </div>
-            <div class="sliderItem">
-                <img src="./img/" alt="" class="sliderImg">
-                <div class="sliderBg"></div>
-                <h1 class="sliderTitle">RCB</br> NEW</br></h1>
-                <h2 class="sliderPrice">₱2,500</h2>
-                <a href="#product">
-                    <button class="buyButton">BUY NOW!</button>
-                </a>
-            </div>
-            <div class="sliderItem">
-                <img src="./img/" alt="" class="sliderImg">
-                <div class="sliderBg"></div>
-                <h1 class="sliderTitle">MUTTARU</br> NEW</br></h1>
-                <h2 class="sliderPrice">₱2,500</h2>
-                <a href="#product">
-                    <button class="buyButton">BUY NOW!</button>
-                </a>
+
+            <!-- Third column: Buy Now Button with BOM X text above -->
+            <div class="col-4 d-flex flex-column justify-content-center align-items-center position-relative">
+                <!-- BOM X text above the button -->
+                <h2 class="text-black mb-3"
+                    style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+                    BOM X <br>
+                </h2>
+                NEW!</h2>
+                <button class="btn btn-success btn-lg w-75 mb-3" style="background-color: black;">BUY NOW!</button>
             </div>
         </div>
     </div>
