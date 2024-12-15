@@ -24,8 +24,8 @@ $isLoggedIn = isset($_SESSION['customer_id']);
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding-right: 20px;">
             <div class="menuItems" style="display: flex; align-items: center; margin-left: 20px;">
                 <?php
-                // Query to fetch distinct p_brand and their associated image
-                $sql = "SELECT DISTINCT p_brand, p_image FROM product";
+                // Query to fetch distinct p_brand, p_image, p_price, and p_name
+                $sql = "SELECT DISTINCT p_brand, p_image, p_price, p_name FROM product";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     // Generate menu items dynamically
@@ -33,15 +33,20 @@ $isLoggedIn = isset($_SESSION['customer_id']);
                         // Check if the image path already contains 'uploads/'
                         $imagePath = htmlspecialchars($row['p_image']);
                         if (strpos($imagePath, 'uploads/') === false) {
-                            // If 'uploads/' is not already part of the path, prepend it
                             $imageUrl = 'uploads/' . $imagePath;
                         } else {
-                            // If 'uploads/' is already part of the path, use it as is
                             $imageUrl = $imagePath;
                         }
 
-                        // Generate the menu item with brand name and image path
-                        echo '<h3 class="menuItem" data-brand="' . htmlspecialchars($row['p_brand']) . '" data-image="' . $imageUrl . '" style="color: lightgray; margin-right: 15px; cursor: pointer;">' . htmlspecialchars($row['p_brand']) . '</h3>';
+                        // Generate the menu item with brand name, image path, price, and name
+                        echo '<h3 class="menuItem" 
+                data-brand="' . htmlspecialchars($row['p_brand']) . '" 
+                data-image="' . $imageUrl . '" 
+                data-price="₱' . htmlspecialchars($row['p_price']) . '" 
+                data-name="' . htmlspecialchars($row['p_name']) . '" 
+                style="color: lightgray; margin-right: 15px; cursor: pointer;">
+                ' . htmlspecialchars($row['p_brand']) . '
+              </h3>';
                     }
                 } else {
                     echo '<h3 class="menuItem" style="color: lightgray; margin-right: 15px;">No Brands Found</h3>';

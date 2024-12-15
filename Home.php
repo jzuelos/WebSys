@@ -41,7 +41,7 @@ if (!isset($_SESSION['customer_id'])) {
             <div class="col-4 d-flex justify-content-center align-items-start position-relative">
                 <div class="p-3 rounded shadow-sm text-center w-100"
                     style="background-color: white; border: 1px solid black;">
-                    <p class="m-0 display-4 text-black">₱2500</p>
+                    <p id="price" class="m-0 display-4 text-black">₱2500</p>
                 </div>
             </div>
 
@@ -54,7 +54,6 @@ if (!isset($_SESSION['customer_id'])) {
                     <img id="brandImage" src="" alt="Brand Image"
                         style="max-width: 90%; max-height: 90%; object-fit: contain;">
                 </div>
-
                 <!-- Hidden square (hidden using visibility: hidden) -->
                 <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded shadow-lg"
                     style="width: 300px; height: 300px; visibility: hidden;">
@@ -65,13 +64,13 @@ if (!isset($_SESSION['customer_id'])) {
             <!-- Third column: Buy Now Button with BOM X text above -->
             <div class="col-4 d-flex flex-column justify-content-center align-items-center position-relative">
                 <!-- BOM X text above the button -->
-                <h2 class="text-black mb-3"
+                <h2 id="bomxText" class="text-black mb-3"
                     style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
-                    BOM X <br>
+                    NEW!
                 </h2>
-                NEW!</h2>
                 <button class="btn btn-success btn-lg w-75 mb-3" style="background-color: black;">BUY NOW!</button>
             </div>
+
         </div>
     </div>
 
