@@ -97,7 +97,7 @@ if (!isset($_SESSION['customer_id'])) {
     </div>
 
     <div class="product" id="product">
-        <img id="brandImage" src="" alt="Brand Image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        <img src="./img/boomx.png" alt="" class="productImg" id="brandImage">
         <div class="productDetails">
             <h1 class="productTitle" id="productTitle">BOM X</h1>
             <h2 class="productPrice" id="productPrice">₱2500</h2>
@@ -120,31 +120,28 @@ if (!isset($_SESSION['customer_id'])) {
             <button class="productButton">BUY NOW!</button>
         </div>
 
-    </div>
-
-
-    <div class="payment">
-        <h1 class="payTitle">Personal Information</h1>
-        <label>Name and Surname</label>
-        <input type="text" placeholder="John Doe" class="payInput">
-        <label>Phone Number</label>
-        <input type="text" placeholder="+1 234 5678" class="payInput">
-        <label>Address</label>
-        <input type="text" placeholder="Elton St 21 22-145" class="payInput">
-        <h1 class="payTitle">Card Information</h1>
-        <div class="cardIcons">
-            <img src="./img/visa.png" width="40" alt="" class="cardIcon">
-            <img src="./img/master.png" alt="" width="40" class="cardIcon">
+        <div class="payment">
+            <h1 class="payTitle">Personal Information</h1>
+            <label>Name and Surname</label>
+            <input type="text" placeholder="John Doe" class="payInput">
+            <label>Phone Number</label>
+            <input type="text" placeholder="+1 234 5678" class="payInput">
+            <label>Address</label>
+            <input type="text" placeholder="Elton St 21 22-145" class="payInput">
+            <h1 class="payTitle">Card Information</h1>
+            <div class="cardIcons">
+                <img src="./img/visa.png" width="40" alt="" class="cardIcon">
+                <img src="./img/master.png" alt="" width="40" class="cardIcon">
+            </div>
+            <input type="password" class="payInput" placeholder="Card Number">
+            <div class="cardInfo">
+                <input type="text" placeholder="mm" class="payInput sm">
+                <input type="text" placeholder="yyyy" class="payInput sm">
+                <input type="text" placeholder="cvv" class="payInput sm">
+            </div>
+            <button class="payButton">Checkout!</button>
+            <span class="close">X</span>
         </div>
-        <input type="password" class="payInput" placeholder="Card Number">
-        <div class="cardInfo">
-            <input type="text" placeholder="mm" class="payInput sm">
-            <input type="text" placeholder="yyyy" class="payInput sm">
-            <input type="text" placeholder="cvv" class="payInput sm">
-        </div>
-        <button class="payButton">Checkout!</button>
-        <span class="close">X</span>
-    </div>
     </div>
     <?php include 'footer.php'; ?>
     <script src="./Home.js"></script>
