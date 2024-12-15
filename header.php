@@ -1,8 +1,3 @@
-<?php
-// Check if the user is logged in
-$isLoggedIn = isset($_SESSION['customer_id']);
-?>
-
 <!-- Main Navigation -->
 <nav id="nav" style="background-color: #3C3D37;">
     <div class="navTop" style="display: flex; justify-content: space-between; align-items: center;">
@@ -20,7 +15,7 @@ $isLoggedIn = isset($_SESSION['customer_id']);
         </div>
 
         <!-- Search, Text and Menu Items Aligned Horizontally -->
-        <div class="navItem"
+        <div class="navItem"    
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding-right: 20px;">
             <div class="menuItems" style="display: flex; align-items: center; margin-left: 20px;">
                 <?php

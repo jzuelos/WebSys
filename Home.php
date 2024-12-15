@@ -10,11 +10,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-//Check if the user is logged in by verifying if 'user_id' exists in the session
-if (!isset($_SESSION['customer_id'])) {
-    header("Location: userreg.php"); // Redirect to login page if user is not logged in
-    exit; // Stop further execution after redirection
-}
+// Check if the user is logged in by checking if 'customer_id' is set in the session
+$isLoggedIn = isset($_SESSION['customer_id']) ? true : false;
+
+// Output the login status as a hidden span
+echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : 'false') . '</span>';
 ?>
 
 <html lang="en">
@@ -122,7 +122,7 @@ if (!isset($_SESSION['customer_id'])) {
                     <option value="suzuki">Aerox</option>
                 </select>
             </div>
-            <button class="productButton">BUY NOW!</button>
+            <button class="productButton" id="buyNowBtn">BUY NOW!</button>
         </div>
 
         <div class="payment">

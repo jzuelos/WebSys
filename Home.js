@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
       // Scroll to the product details section
       productDetailsSection.scrollIntoView({ behavior: 'smooth' });
     });
-
   };
 
   // Add click event listener to each menu item
@@ -80,4 +79,29 @@ document.addEventListener('DOMContentLoaded', function () {
   if (menuItems.length > 0) {
     menuItems[0].click();
   }
+
+  fetch('home.php')
+    .then(response => response.text()) // Get the response as text
+    .then(data => {
+      // Parse the plain HTML response to check the login status
+      const isLoggedInElement = new DOMParser().parseFromString(data, 'text/html');
+      const isLoggedIn = isLoggedInElement.querySelector('#isLoggedIn').textContent;
+
+      // Use the login status to handle the button logic
+      const buyNowBtn = document.getElementById('buyNowBtn');
+      if (buyNowBtn) {
+        buyNowBtn.addEventListener('click', function () {
+          if (isLoggedIn === 'false') {
+            // Redirect to the login page if not logged in
+            window.location.href = 'userreg.php';
+          } else {
+            // Proceed with the buy action
+            console.log('Proceeding with purchase...');
+          }
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching login status:', error);
+    });
 });
