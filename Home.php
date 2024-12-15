@@ -63,8 +63,12 @@ if (!isset($_SESSION['customer_id'])) {
             <!-- Third column: Buy Now Button with BOM X text above -->
             <div class="col-4 d-flex flex-column justify-content-center align-items-center position-relative">
                 <!-- BOM X text above the button -->
-                <h2 id="bomxText" class="mb-4"
+                <h2 id="bomxText" class="mb-5"
                     style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black;">
+                    NEW!
+                </h2>
+                <h2 id="bomxText" class="mb-4"
+                    style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; color: red; text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black;">
                     NEW!
                 </h2>
                 <!-- Adding more margin-bottom to create more space between the text and button -->
@@ -97,7 +101,7 @@ if (!isset($_SESSION['customer_id'])) {
     </div>
 
     <div class="product" id="product">
-        <img src="./img/boomx.png" alt="" class="productImg" id="brandImage">
+        <img src="" alt="" class="productImg" id="productImage">
         <div class="productDetails">
             <h1 class="productTitle" id="productTitle">BOM X</h1>
             <h2 class="productPrice" id="productPrice">₱2500</h2>

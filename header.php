@@ -24,8 +24,8 @@ $isLoggedIn = isset($_SESSION['customer_id']);
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding-right: 20px;">
             <div class="menuItems" style="display: flex; align-items: center; margin-left: 20px;">
                 <?php
-                // Query to fetch distinct p_brand, p_image, p_price, and p_name
-                $sql = "SELECT DISTINCT p_brand, p_image, p_price, p_name FROM product";
+                // Query to fetch distinct p_brand, p_image, p_price, p_name, and p_desc
+                $sql = "SELECT DISTINCT p_brand, p_image, p_price, p_name, p_desc FROM product";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     // Generate menu items dynamically
@@ -38,15 +38,16 @@ $isLoggedIn = isset($_SESSION['customer_id']);
                             $imageUrl = $imagePath;
                         }
 
-                        // Generate the menu item with brand name, image path, price, and name
+                        // Generate the menu item with brand name, image path, price, name, and description
                         echo '<h3 class="menuItem" 
-                data-brand="' . htmlspecialchars($row['p_brand']) . '" 
-                data-image="' . $imageUrl . '" 
-                data-price="₱' . htmlspecialchars($row['p_price']) . '" 
-                data-name="' . htmlspecialchars($row['p_name']) . '" 
-                style="color: lightgray; margin-right: 15px; cursor: pointer;">
-                ' . htmlspecialchars($row['p_brand']) . '
-              </h3>';
+            data-brand="' . htmlspecialchars($row['p_brand']) . '" 
+            data-image="' . $imageUrl . '" 
+            data-price="₱' . htmlspecialchars($row['p_price']) . '" 
+            data-name="' . htmlspecialchars($row['p_name']) . '" 
+            data-desc="' . htmlspecialchars($row['p_desc']) . '" 
+            style="color: lightgray; margin-right: 15px; cursor: pointer;">
+            ' . htmlspecialchars($row['p_brand']) . '
+          </h3>';
                     }
                 } else {
                     echo '<h3 class="menuItem" style="color: lightgray; margin-right: 15px;">No Brands Found</h3>';
@@ -66,7 +67,6 @@ $isLoggedIn = isset($_SESSION['customer_id']);
         </div>
     </div>
 </nav>
-
 
 <!-- Off-Canvas Sidebar (Account Menu) -->
 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasAccount"

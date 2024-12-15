@@ -6,27 +6,58 @@ document.addEventListener('DOMContentLoaded', function () {
     const imageUrl = item.getAttribute('data-image');
     const price = item.getAttribute('data-price');
     const name = item.getAttribute('data-name');
+    const description = item.getAttribute('data-desc');
 
-    // Update the image in the oval using the image URL
+    // Select elements to update
     const brandImage = document.getElementById('brandImage');
-    brandImage.src = imageUrl;
+    const productImage = document.getElementById('productImage');
+    const productDesc = document.getElementById('productDesc');
+    const priceElement = document.getElementById('price');
+    const productPrice = document.getElementById('productPrice');
+    const bomxText = document.getElementById('bomxText');
+    const productName = document.getElementById('productTitle');
 
-    // Add fallback for missing or broken images
-    brandImage.onerror = () => {
-      brandImage.src = 'path/to/fallback-image.jpg'; // Replace with your fallback image
+    // Fade out current content
+    const fadeOut = (element) => {
+      element.style.transition = 'opacity 0.5s';
+      element.style.opacity = 0;
     };
 
-    // Update the price
-    const priceElement = document.getElementById('price');
-    priceElement.textContent = price;
+    // Fade in the new content
+    const fadeIn = (element) => {
+      element.style.transition = 'opacity 0.3s';
+      element.style.opacity = 1;
+    };
 
-    // Update the BOM X text
-    const bomxText = document.getElementById('bomxText');
-    bomxText.innerHTML = `${name} <span style="color: red;">NEW!</span>`;
+    // Apply fade out and fade in to each element
+    fadeOut(brandImage);
+    fadeOut(productImage);
+    fadeOut(productDesc);
+    fadeOut(priceElement);
+    fadeOut(productPrice);
+    fadeOut(bomxText);
+    fadeOut(productName);
 
-    // Highlight the selected menu item
-    menuItems.forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
+    // After the fade out, update the content and fade them back in
+    setTimeout(() => {
+      // Update the content
+      brandImage.src = imageUrl;
+      productImage.src = imageUrl;
+      productDesc.textContent = description;
+      priceElement.textContent = price;
+      productPrice.textContent = price;
+      bomxText.innerHTML = `${name} `;
+      productName.innerHTML = `${name}`;
+
+      // Fade in the updated content
+      fadeIn(brandImage);
+      fadeIn(productImage);
+      fadeIn(productDesc);
+      fadeIn(priceElement);
+      fadeIn(productPrice);
+      fadeIn(bomxText);
+      fadeIn(productName);
+    }, 500); // Wait for the fade-out to complete before updating
   };
 
   // Add click event listener to each menu item
