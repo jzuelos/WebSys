@@ -34,12 +34,11 @@ if (!isset($_SESSION['customer_id'])) {
 
 <body>
     <?php include 'header.php'; ?>
-
     <div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
         <div class="row w-100 position-relative">
             <!-- First column: Price -->
             <div class="col-4 d-flex justify-content-center align-items-start position-relative">
-                <div class="p-3 rounded shadow-sm text-center w-100"
+                <div class="p-3 rounded shadow-sm text-center w-80"
                     style="background-color: white; border: 1px solid black;">
                     <p id="price" class="m-0 display-4 text-black">₱2500</p>
                 </div>
@@ -52,7 +51,7 @@ if (!isset($_SESSION['customer_id'])) {
                     style="width: 800px; height: 400px; border-radius: 50%; background-color: #339f62; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1;">
                     <!-- Image inside the oval -->
                     <img id="brandImage" src="" alt="Brand Image"
-                        style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                        style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 <!-- Hidden square (hidden using visibility: hidden) -->
                 <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded shadow-lg"
@@ -64,13 +63,13 @@ if (!isset($_SESSION['customer_id'])) {
             <!-- Third column: Buy Now Button with BOM X text above -->
             <div class="col-4 d-flex flex-column justify-content-center align-items-center position-relative">
                 <!-- BOM X text above the button -->
-                <h2 id="bomxText" class="text-black mb-3"
-                    style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+                <h2 id="bomxText" class="mb-4"
+                    style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black;">
                     NEW!
                 </h2>
+                <!-- Adding more margin-bottom to create more space between the text and button -->
                 <button class="btn btn-success btn-lg w-75 mb-3" style="background-color: black;">BUY NOW!</button>
             </div>
-
         </div>
     </div>
 
