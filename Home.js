@@ -58,6 +58,15 @@ document.addEventListener('DOMContentLoaded', function () {
       fadeIn(bomxText);
       fadeIn(productName);
     }, 500); // Wait for the fade-out to complete before updating
+
+    const buyNowButton = document.getElementById('buyNowButton');
+    const productDetailsSection = document.getElementById('productDetails');
+
+    buyNowButton.addEventListener('click', function () {
+      // Scroll to the product details section
+      productDetailsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
   };
 
   // Add click event listener to each menu item

@@ -71,8 +71,9 @@ if (!isset($_SESSION['customer_id'])) {
                     style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: bold; text-transform: uppercase; color: red; text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black;">
                     NEW!
                 </h2>
-                <!-- Adding more margin-bottom to create more space between the text and button -->
-                <button class="btn btn-success btn-lg w-75 mb-3" style="background-color: black;">BUY NOW!</button>
+                <!-- "BUY NOW!" button -->
+                <button class="btn btn-success btn-lg w-75 mb-3" style="background-color: black;" id="buyNowButton">BUY
+                    NOW!</button>
             </div>
         </div>
     </div>
@@ -102,7 +103,7 @@ if (!isset($_SESSION['customer_id'])) {
 
     <div class="product" id="product">
         <img src="" alt="" class="productImg" id="productImage">
-        <div class="productDetails">
+        <div class="productDetails" id="productDetails">
             <h1 class="productTitle" id="productTitle">BOM X</h1>
             <h2 class="productPrice" id="productPrice">₱2500</h2>
             <p class="productDesc" id="productDesc">Lorem ipsum dolor sit amet consectetur impal adipisicing elit. Alias
