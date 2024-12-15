@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2024 at 01:43 PM
+-- Generation Time: Dec 15, 2024 at 07:20 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -89,8 +89,9 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `p_brand`, `p_name`, `p_desc`, `p_price`, `p_active`, `p_creation`, `p_image`) VALUES
-(39, 'BomX', 'BomX Star Mags', 'asdf', 2500, '1', '2024-12-13', 'uploads/675c2b564a2e5_BomX.jpg'),
-(40, 'Asio', 'Asio Mags', 'asdfas', 3500, '1', '2024-12-13', 'uploads/product_675c2ba3c1b99.jpg');
+(39, 'BomX', 'BomX Star Mags', 'asdf', 2500, '1', '2024-12-13', 'uploads/product_675d9cc7d1527.png'),
+(40, 'Asio', 'Asio Mags', 'asdfas', 3500, '1', '2024-12-13', 'uploads/product_675d986c3b9bc.png'),
+(43, 'TRC', 'TRC CNC Mags', 'sdfas', 2400, '1', '2024-12-14', 'uploads/675d994b826a5_trc.png');
 
 --
 -- Indexes for dumped tables
@@ -135,7 +136,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
