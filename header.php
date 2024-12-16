@@ -15,9 +15,9 @@
         </div>
 
         <!-- Search, Text and Menu Items Aligned Horizontally -->
-        <div class="navItem"    
+        <div class="navItem"
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding-right: 20px;">
-            <div class="menuItems" style="display: flex; align-items: center; margin-left: 20px;">
+            <div class="menuItems d-flex align-items-center overflow-auto py-2" style="margin-left: 20px;">
                 <?php
                 // Query to fetch distinct p_brand, p_image, p_price, p_name, and p_desc
                 $sql = "SELECT DISTINCT p_brand, p_image, p_price, p_name, p_desc FROM product";
@@ -34,18 +34,18 @@
                         }
 
                         // Generate the menu item with brand name, image path, price, name, and description
-                        echo '<h3 class="menuItem" 
-            data-brand="' . htmlspecialchars($row['p_brand']) . '" 
-            data-image="' . $imageUrl . '" 
-            data-price="₱' . htmlspecialchars($row['p_price']) . '" 
-            data-name="' . htmlspecialchars($row['p_name']) . '" 
-            data-desc="' . htmlspecialchars($row['p_desc']) . '" 
-            style="color: lightgray; margin-right: 15px; cursor: pointer;">
-            ' . htmlspecialchars($row['p_brand']) . '
-          </h3>';
+                        echo '<h3 class="menuItem text-light me-3" 
+                data-brand="' . htmlspecialchars($row['p_brand']) . '" 
+                data-image="' . $imageUrl . '" 
+                data-price="₱' . htmlspecialchars($row['p_price']) . '" 
+                data-name="' . htmlspecialchars($row['p_name']) . '" 
+                data-desc="' . htmlspecialchars($row['p_desc']) . '" 
+                style="cursor: pointer;">
+                ' . htmlspecialchars($row['p_brand']) . '
+            </h3>';
                     }
                 } else {
-                    echo '<h3 class="menuItem" style="color: lightgray; margin-right: 15px;">No Brands Found</h3>';
+                    echo '<h3 class="menuItem text-light me-3">No Brands Found</h3>';
                 }
                 ?>
             </div>
