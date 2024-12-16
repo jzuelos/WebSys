@@ -4,10 +4,10 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $servername = "srv1632.hstgr.io";
-        $username = "u143688490_user_motomagx"; // Your database username
-        $password = "Motomagx_09"; // Your database password
-        $dbname = "u143688490_magx"; // Your database name
+        $servername = "localhost";
+        $username = "root"; // Your database username
+        $password = ""; // Your database password
+        $dbname = "magx"; // Your database name
         
         // Create connection
         $this->connection = new mysqli($servername, $username, $password, $dbname);
