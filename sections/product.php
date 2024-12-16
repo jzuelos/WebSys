@@ -195,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_products'])) {
                         echo "<pre>Failed to delete image: $image_path</pre>";
                     }
                 } else {
-                    echo "<pre>Image does not exist: $image_path</pre>";
                 }
             }
 
