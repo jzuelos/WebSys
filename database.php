@@ -5,9 +5,9 @@ class Database {
 
     private function __construct() {
         $servername = "srv1632.hstgr.io";
-        $username = "u143688490_magx"; // Your database username
+        $username = "u143688490_motomag"; // Your database username
         $password = "MotoMagX_09"; // Your database password
-        $dbname = "u143688490_magx_db"; // Your database name
+        $dbname = "u143688490_motomagx"; // Your database name
         
         // Create connection
         $this->connection = new mysqli($servername, $username, $password, $dbname);
