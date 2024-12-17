@@ -29,7 +29,7 @@ echo "Customer ID: " . $_SESSION['customer_id'];
 <body class="d-flex flex-column align-items-center" style="background-color: #f8f9fa;">
   <!-- Header -->
   <div class="header d-flex justify-content-between align-items-center px-3 py-2 rounded mb-4"
-    style="width: 80%; height: 80px; background-color: #339f62; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);"> <!-- Shadow on Header -->
+    style="width: 80%; height: 80px; background-color: #3C3D37; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);"> <!-- Shadow on Header -->
     <p class="logo mb-0" style="font-size: 24px; font-weight: bold; color: white;">MOTOMAGX | Cart</p>
     <div class="cart d-flex align-items-center px-3 rounded" style="background-color: #f1f1f1; cursor: pointer;">
       <i class="fa-solid fa-cart-shopping me-2"></i>
