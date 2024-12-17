@@ -91,7 +91,7 @@
         <div class="d-grid gap-2 mb-4">
             <?php if (!$isLoggedIn): ?>
                 <!-- Show Login -->
-                <p>Already have an account?</p>
+                <p style="font-size: 1.5rem; font-weight: bold;">Already have an account?</p>
                 <button class="btn btn-outline-light fw-bold text-uppercase" onclick="location.href='userreg.php'"
                     type="button">
                     Login
@@ -99,18 +99,29 @@
             <?php else: ?>
                 <!-- Show Logout -->
                 <p style="font-size: 1.5rem; font-weight: bold;">
-                    <?php echo htmlspecialchars(ucfirst($_SESSION['username'])); ?>'s Account Settings</p>
+                    <?php echo htmlspecialchars(ucfirst($_SESSION['username'])); ?>'s Account Settings
+                </p>
 
                 <!-- Cart Link -->
                 <p style="font-size: 1.25rem;">
-                    <a href="cart.php" style="text-decoration: none; color: #75A47F;">Go to Cart</a>
+                    <?php
+                    if (isset($_SESSION['customer_id'])) {
+                        // User is logged in, show the cart link
+                        echo '<a href="cart.php" style="text-decoration: none; color: white;">My Cart</a>';
+                    } else {
+                        // User is not logged in, show login prompt or link
+                        echo '<span style="color: white;">Please <a href="login.php" style="text-decoration: none; color: white;">log in</a> to view your cart</span>';
+                    }
+                    ?>
                 </p>
+
 
                 <!-- Logout Button -->
                 <button class="btn btn-outline-light fw-bold text-uppercase" onclick="location.href='logout.php'"
                     type="button">
                     Logout
                 </button>
+
             <?php endif; ?>
         </div>
     </div>

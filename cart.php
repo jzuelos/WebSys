@@ -1,3 +1,18 @@
+<?php
+session_start(); // Start session at the top
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once 'database.php';
+
+$conn = Database::getInstance();
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+echo "Customer ID: " . $_SESSION['customer_id'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,8 +29,8 @@
 <body class="d-flex flex-column align-items-center" style="background-color: #f8f9fa;">
   <!-- Header -->
   <div class="header d-flex justify-content-between align-items-center px-3 py-2 rounded mb-4"
-    style="width: 80%; height: 80px; background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);"> <!-- Shadow on Header -->
-    <p class="logo mb-0" style="font-size: 24px; font-weight: bold;">MOTOMAGX</p>
+    style="width: 80%; height: 80px; background-color: #339f62; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);"> <!-- Shadow on Header -->
+    <p class="logo mb-0" style="font-size: 24px; font-weight: bold; color: white;">MOTOMAGX | Cart</p>
     <div class="cart d-flex align-items-center px-3 rounded" style="background-color: #f1f1f1; cursor: pointer;">
       <i class="fa-solid fa-cart-shopping me-2"></i>
       <p id="count" class="m-0">0</p>
@@ -28,7 +43,7 @@
     <div id="cartItems" class="cart-items bg-white w-75 p-3 d-flex flex-column" style="background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);"> <!-- Shadow on "My Cart" -->
       <div class="cart-header">My Cart</div>
 
-      <!-- Cart Item Example -->
+      <!-- Cart Item-->
       <div class="cart-item d-flex align-items-center bg-white py-3 border-bottom">
         <img src="https://via.placeholder.com/80" alt="Product Image">
         <div class="cart-item-details">
