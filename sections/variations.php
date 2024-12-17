@@ -102,9 +102,9 @@ $products = getAllProducts($conn);
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="select-width">Select</th>
+                        <th class="select-width">Product ID</th>
                         <th class="equal-width">Product Image</th>
-                        <th class="equal-width">Brand Name</th>
+                        <th class="equal-width">Brand</th>
                         <th class="equal-width">Product Name</th>
                         <th class="equal-width">Action</th>
                     </tr>
@@ -114,8 +114,8 @@ $products = getAllProducts($conn);
                     // Loop through the fetched products and display them
                     foreach ($products as $product) {
                         echo "<tr>";
-                        // Checkbox column
-                        echo "<td><input type='radio' name='product_id' value='" . $product['product_id'] . "'></td>";
+                        // Product ID column (instead of radio button)
+                        echo "<td>" . htmlspecialchars($product['product_id']) . "</td>";
                         // Product image column
                         echo "<td><img src='" . htmlspecialchars($product['p_image']) . "' alt='" . htmlspecialchars($product['p_name']) . "' style='width: 50px; height: auto;'></td>";
                         // Brand name column
@@ -124,15 +124,16 @@ $products = getAllProducts($conn);
                         echo "<td>" . htmlspecialchars($product['p_name']) . "</td>";
                         // Action column with form for adding models
                         echo "<td>
-                                <form method='POST'>
-                                    <input type='hidden' name='product_id' value='" . $product['product_id'] . "'>
-                                    <input type='text' name='model_name' class='form-control' placeholder='Enter model name' required>
-                                    <button type='submit' class='btn btn-primary mt-2'>Add Model</button>
-                                </form>
-                              </td>";
+            <form method='POST'>
+                <input type='hidden' name='product_id' value='" . $product['product_id'] . "'>
+                <input type='text' name='model_name' class='form-control' placeholder='Enter model name' required>
+                <button type='submit' class='btn btn-primary mt-2'>Add Model</button>
+            </form>
+          </td>";
                         echo "</tr>";
                     }
                     ?>
+
                 </tbody>
             </table>
         </div>

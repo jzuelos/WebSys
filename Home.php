@@ -58,7 +58,7 @@ echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : '
                 <!-- Hidden square (hidden using visibility: hidden) -->
                 <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded shadow-lg"
                     style="width: 300px; height: 300px; visibility: hidden;">
-                    <p class="m-0">pautot lang to</p>
+                    <p class="m-0"></p>
                 </div>
             </div>
 

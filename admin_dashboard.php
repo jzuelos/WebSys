@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 // Sanitize and validate the page input
-$allowed_pages = ['dashboard', 'product', 'customer', 'seller', 'orders', 'variations'];
+$allowed_pages = ['dashboard', 'product', 'customer', 'orders', 'variations'];
 if (!in_array($page, $allowed_pages)) {
   $page = '404';
 }
@@ -58,7 +58,6 @@ if (!in_array($page, $allowed_pages)) {
               'dashboard' => 'Dashboard',
               'product' => 'Products',
               'customer' => 'Customers',
-              'seller' => 'Sellers',
               'orders' => 'Orders',
               'variations' => 'Variations',
             ];

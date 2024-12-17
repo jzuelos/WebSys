@@ -85,10 +85,13 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(data => {
       // Parse the plain HTML response to check the login status
       const isLoggedInElement = new DOMParser().parseFromString(data, 'text/html');
-      const isLoggedIn = isLoggedInElement.querySelector('#isLoggedIn').textContent;
+      const isLoggedIn = isLoggedInElement.querySelector('#isLoggedIn').textContent.trim(); // Trim any whitespace
 
       // Use the login status to handle the button logic
       const buyNowBtn = document.getElementById('buyNowBtn');
+      const cartBtn = document.getElementById('cartBtn');
+
+      // Handle Buy Now button
       if (buyNowBtn) {
         buyNowBtn.addEventListener('click', function () {
           if (isLoggedIn === 'false') {
@@ -100,8 +103,22 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
       }
+
+      // Handle Cart button
+      if (cartBtn) {
+        cartBtn.addEventListener('click', function () {
+          if (isLoggedIn === 'false') {
+            // Redirect to the login page if not logged in
+            window.location.href = 'userreg.php';
+          } else {
+            // Proceed with the cart action
+            console.log('Proceeding with cart...');
+          }
+        });
+      }
     })
     .catch(error => {
       console.error('Error fetching login status:', error);
     });
+
 });
