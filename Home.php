@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start session at the top
+session_start(); // Start session
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -15,6 +15,38 @@ $isLoggedIn = isset($_SESSION['customer_id']) ? true : false;
 
 // Output the login status as a hidden span
 echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : 'false') . '</span>';
+
+// Retrieve the product ID from the POST request
+$productId = isset($_POST['product_id']) ? $_POST['product_id'] : null;
+$customerId = $_SESSION['customer_id']; // Assuming customer_id is stored in the session
+
+if ($productId) {
+    // Get the current date
+    $currentDate = date('Y-m-d'); // Format: YYYY-MM-DD
+
+    // Prepare SQL query to insert product_id, customer_id, and the current date into the cart table
+    $sql = "INSERT INTO cart (product_id, customer_id, transaction) 
+            VALUES (?, ?, ?)";
+
+    // Prepare the statement
+    if ($stmt = $conn->prepare($sql)) {
+        // Bind parameters
+        $stmt->bind_param("iis", $productId, $customerId, $currentDate); // "i" for integers, "s" for string
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "Product ID $productId added to cart for customer $customerId on $currentDate.";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        // Close the statement
+        $stmt->close();
+    } else {
+        echo "Error preparing statement: " . $conn->error;
+    }
+} else {
+};
 ?>
 
 <html lang="en">
@@ -33,6 +65,11 @@ echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : '
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>MotoMagX</title>
 </head>
+
+<form id="cartForm" action="" method="POST" style="display: none;">
+    <input type="hidden" id="productIdInput" name="product_id" value="">
+</form>
+
 
 <body>
     <?php include 'header.php'; ?>

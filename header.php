@@ -19,8 +19,8 @@
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding-right: 20px;">
             <div class="menuItems d-flex align-items-center overflow-auto py-2" style="margin-left: 20px;">
                 <?php
-                // Query to fetch distinct p_brand, p_image, p_price, p_name, and p_desc
-                $sql = "SELECT DISTINCT p_brand, p_image, p_price, p_name, p_desc FROM product";
+                // Query to fetch distinct p_brand, p_image, p_price, p_name, p_desc, and product_id
+                $sql = "SELECT DISTINCT product_id, p_brand, p_image, p_price, p_name, p_desc FROM product";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     // Generate menu items dynamically
@@ -33,8 +33,9 @@
                             $imageUrl = $imagePath;
                         }
 
-                        // Generate the menu item with brand name, image path, price, name, and description
+                        // Generate the menu item with product ID, brand name, image path, price, name, and description
                         echo '<h3 class="menuItem text-light me-3" 
+                data-id="' . htmlspecialchars($row['product_id']) . '" 
                 data-brand="' . htmlspecialchars($row['p_brand']) . '" 
                 data-image="' . $imageUrl . '" 
                 data-price="₱' . htmlspecialchars($row['p_price']) . '" 

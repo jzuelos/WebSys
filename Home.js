@@ -2,11 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const menuItems = document.querySelectorAll('.menuItem');
 
   const updateContent = (item) => {
+    const productId = item.getAttribute('data-id');  // Get the product ID
     const brand = item.getAttribute('data-brand');
     const imageUrl = item.getAttribute('data-image');
     const price = item.getAttribute('data-price');
     const name = item.getAttribute('data-name');
     const description = item.getAttribute('data-desc');
+
+    console.log('Product ID:', productId);  // You can now use this product ID as needed
 
     // Select elements to update
     const brandImage = document.getElementById('brandImage');
@@ -71,7 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // Add click event listener to each menu item
   menuItems.forEach(item => {
     item.addEventListener('click', function () {
-      updateContent(this);
+      // Remove 'selected' class from all menu items
+      menuItems.forEach(item => item.classList.remove('selected'));
+      
+      // Add 'selected' class to the clicked item
+      item.classList.add('selected');
+
+      // Update the content based on the selected item
+      updateContent(item);
     });
   });
 
@@ -100,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
           } else {
             // Proceed with the buy action
             console.log('Proceeding with purchase...');
+            // Optionally, you can trigger an API call to purchase using productId
           }
         });
       }
@@ -111,8 +122,19 @@ document.addEventListener('DOMContentLoaded', function () {
             // Redirect to the login page if not logged in
             window.location.href = 'userreg.php';
           } else {
-            // Proceed with the cart action
-            console.log('Proceeding with cart...');
+            // Add product to cart using hidden form and product ID
+            const selectedItem = document.querySelector('.menuItem.selected');
+            if (selectedItem) {
+              const productId = selectedItem.getAttribute('data-id');
+              
+              // Set the product ID in the hidden form and submit
+              document.getElementById('productIdInput').value = productId;
+              document.getElementById('cartForm').submit();
+
+              console.log('Adding to cart... Product ID:', productId);
+            } else {
+              console.error('No product selected');
+            }
           }
         });
       }
@@ -120,5 +142,4 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => {
       console.error('Error fetching login status:', error);
     });
-
 });
