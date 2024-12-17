@@ -98,7 +98,15 @@
                 </button>
             <?php else: ?>
                 <!-- Show Logout -->
-                <p><?php echo htmlspecialchars(ucfirst($_SESSION['username'])); ?>'s Account Settings</p>
+                <p style="font-size: 1.5rem; font-weight: bold;">
+                    <?php echo htmlspecialchars(ucfirst($_SESSION['username'])); ?>'s Account Settings</p>
+
+                <!-- Cart Link -->
+                <p style="font-size: 1.25rem;">
+                    <a href="cart.php" style="text-decoration: none; color: #75A47F;">Go to Cart</a>
+                </p>
+
+                <!-- Logout Button -->
                 <button class="btn btn-outline-light fw-bold text-uppercase" onclick="location.href='logout.php'"
                     type="button">
                     Logout

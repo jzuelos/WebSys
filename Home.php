@@ -23,6 +23,8 @@ echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : '
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome for Cart Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
         rel="stylesheet">
@@ -122,30 +124,19 @@ echo '<span id="isLoggedIn" style="display: none;">' . ($isLoggedIn ? 'true' : '
                     <option value="suzuki">Aerox</option>
                 </select>
             </div>
-            <button class="productButton" id="buyNowBtn">BUY NOW!</button>
-        </div>
 
-        <div class="payment">
-            <h1 class="payTitle">Personal Information</h1>
-            <label>Name and Surname</label>
-            <input type="text" placeholder="John Doe" class="payInput">
-            <label>Phone Number</label>
-            <input type="text" placeholder="+1 234 5678" class="payInput">
-            <label>Address</label>
-            <input type="text" placeholder="Elton St 21 22-145" class="payInput">
-            <h1 class="payTitle">Card Information</h1>
-            <div class="cardIcons">
-                <img src="./img/visa.png" width="40" alt="" class="cardIcon">
-                <img src="./img/master.png" alt="" width="40" class="cardIcon">
+            <!-- Buttons Container with margin-top added -->
+            <div class="d-flex mt-4">
+                <!-- Cart Button with Icon (no new elements, just added the icon) -->
+                <button class="productButton" id="cartBtn" style="margin-right: 10px;">
+                    <img src="img/cart.png" alt="Cart Icon" style="width: 30px; height: 30px; margin-right: 5px;">Add to
+                    Cart
+                </button>
+
+                <!-- Buy Now Button -->
+                <button class="productButton" id="buyNowBtn"
+                    style="margin-right: 10px; background-color: #597445; color: white;">BUY NOW!</button>
             </div>
-            <input type="password" class="payInput" placeholder="Card Number">
-            <div class="cardInfo">
-                <input type="text" placeholder="mm" class="payInput sm">
-                <input type="text" placeholder="yyyy" class="payInput sm">
-                <input type="text" placeholder="cvv" class="payInput sm">
-            </div>
-            <button class="payButton">Checkout!</button>
-            <span class="close">X</span>
         </div>
     </div>
     <?php include 'footer.php'; ?>
