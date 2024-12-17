@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 07:20 AM
+-- Generation Time: Dec 16, 2024 at 03:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -89,9 +89,11 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `p_brand`, `p_name`, `p_desc`, `p_price`, `p_active`, `p_creation`, `p_image`) VALUES
-(39, 'BomX', 'BomX Star Mags', 'asdf', 2500, '1', '2024-12-13', 'uploads/product_675d9cc7d1527.png'),
-(40, 'Asio', 'Asio Mags', 'asdfas', 3500, '1', '2024-12-13', 'uploads/product_675d986c3b9bc.png'),
-(43, 'TRC', 'TRC CNC Mags', 'sdfas', 2400, '1', '2024-12-14', 'uploads/675d994b826a5_trc.png');
+(54, 'BomX', 'BomX Star Mags', 'A high-performance mag wheel designed for speed and durability, ideal for street and track racing motorcycles. Suitable for Indonesian Concept.', 2500, '1', '2024-12-16', 'uploads/67603da1b70d8_boomx.png'),
+(55, 'Asio', 'Asio Mags', 'Known for its sleek design and strength, this mag wheel is perfect for urban commuting and light off-road riding. Suitable for Big Bike Concept.', 2400, '1', '2024-12-16', 'uploads/67603de07a36d_asio.png'),
+(56, 'TRC', 'TRC CNC Mags', 'Designed for long-distance rides with a focus on comfort and style, the TRC mag wheel combines durability with a sleek, modern look. Suitable for Malaysian DNA.', 2600, '1', '2024-12-16', 'uploads/67603e071c2ef_trc.png'),
+(57, 'RCB', 'RCB Sport Rim', 'A lightweight yet sturdy option, RCB mag wheels are ideal for both street racing and daily rides. Suitable for track and perfomance.', 2700, '1', '2024-12-16', 'uploads/67603e4f0ef33_RCB.png'),
+(58, 'Mattaru', 'Mattaru CNC Mags', 'Built for style and stability, Muttaru wheels are perfect for custom cruiser builds and casual rides. Suitable Thailand concept and Malaysian DNA.', 2900, '1', '2024-12-16', 'uploads/67603f609b185_Mattaru.png');
 
 --
 -- Indexes for dumped tables
@@ -136,7 +138,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `product_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
